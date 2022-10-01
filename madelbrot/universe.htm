@@ -1,0 +1,58 @@
+<canvas id="mom" width="640" height="640"></canvas>
+
+<script>
+
+let width=640;
+let height=640;
+let demiWidth=width*0.5;
+let demiHeight=height*0.5;
+	
+let m = document.getElementById("mom").getContext("2d");
+
+Atom = function(x,y,c){
+		m.fillStyle=c;
+		m.fillRect(x,y,3,3);
+		}
+
+
+let zoomX=1000;
+let zoomY=1000;
+//let xOff=0.12;
+//let yOff=0.86;
+let xOff=0.12;
+let yOff=0.9;
+
+setInterval(render,200);
+
+render();
+
+function render(){
+m.clearRect(0,0,width,height);
+zoomX*=1.04;
+zoomY*=1.04;
+xOff+=0;
+yOff+=0;
+for (let y=1;y<width;y++){
+for (let x=1;x<height;x++){
+
+
+let rad = 64;
+let dx = (x-demiWidth)/zoomX-xOff;
+let dy = (y-demiHeight)/zoomY-yOff;
+let a = dx;
+let b = dy;
+
+for (let t=1;t<640;t++){
+let d = (a*a)-(b*b)+dx;
+b = 2*(a*b)+dy;
+a = d;
+let H = d>rad;
+
+if (H){Atom(x,y,"rgb("+t+","+t*3+","+t*6+")");break;}
+
+}
+}
+}
+} // render.
+
+</script>
