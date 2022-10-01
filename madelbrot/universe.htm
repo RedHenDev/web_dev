@@ -1,9 +1,9 @@
-<canvas id="mom" width="640" height="640"></canvas>
+<canvas id="mom" width="600" height="600"></canvas>
 
 <script>
 
 //*********************************
-document.addEventListener('keyup', (event) => {
+document.addEventListener('keydown', (event) => {
 	let name = event.key;
 	let code = event.code;
 	render(code);
@@ -16,61 +16,58 @@ let width=128;
 let height=128;
 let demiWidth=width*0.5;
 let demiHeight=height*0.5;
+let zoomFactor=1.004;
 // RGB multipliers.
 let rMult=1;
-let gMult=2;
+let gMult=6;
 let bMult=3;
 // Steering strength.
 let steer=0.004;
+let cellStep=3;
 	
 let m = document.getElementById("mom").getContext("2d");
 
 Atom = function(x,y,c){
 		m.fillStyle=c;
-		m.fillRect(x,y,3,3);
+		m.fillRect(x,y,cellStep,cellStep);
 		}
 
 
-let zoomX=1000;
-let zoomY=1000;
+let zoomX=width;
+let zoomY=height;
 //let xOff=0.12;
 //let yOff=0.86;
 let xOff=0.12;
 let yOff=0.9;
 
-setInterval(render,1000/24);
+setInterval(render,1000/32);
 
 render();
 
 function render(_dir){
-m.clearRect(0,0,width,height);
-zoomX*=1.004;
-zoomY*=1.004;
-// For steering.
+console.log(_dir);
+//m.clearRect(0,0,width+1,height+1);
+zoomX*=zoomFactor;
+zoomY*=zoomFactor;
 
+// For steering.
 let dirX=0;
 let dirY=0;
-switch (_dir){
-	case "ArrowUp":
-		dirY=steer;
-		break;
-	case "ArrowDown":
-		dirY=-steer;
-		break;
-	case "ArrowRight":
-		dirX=steer;
-		break;
-	case "ArrowLeft":
-		dirX=-steer;
-		break;
-	default:
-		break;
-}
+	
+if (_dir==="ArrowUp" || _dir==="KeyW"){
+		dirY=-steer;}
+else if (_dir==="ArrowDown" || _dir==="KeyS"){
+		dirY=steer;}
+else if (_dir==="ArrowRight" || _dir==="KeyD"){
+		dirX=steer;}
+else if (_dir==="ArrowLeft" || _dir==="KeyA"){
+		dirX=-steer;}
+
 xOff+=dirX;
 yOff+=dirY;
 
-for (let y=1;y<width;y++){
-for (let x=1;x<height;x++){
+for (let y=0;y<width;y++){
+for (let x=0;x<height;x++){
 
 
 let rad = 64;
