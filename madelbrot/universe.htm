@@ -2,10 +2,26 @@
 
 <script>
 
-let width=640;
-let height=640;
+//*********************************
+document.addEventListener('keyup', (event) => {
+	let name = event.key;
+	let code = event.code;
+	render(code);
+	// My first template literal.
+	//alert(`Key pressed ${name} \r\n Key code value: ${code}`);
+},false);
+//*********************************
+	
+let width=128;
+let height=128;
 let demiWidth=width*0.5;
 let demiHeight=height*0.5;
+// RGB multipliers.
+let rMult=1;
+let gMult=2;
+let bMult=3;
+// Steering strength.
+let steer=0.004;
 	
 let m = document.getElementById("mom").getContext("2d");
 
@@ -22,16 +38,37 @@ let zoomY=1000;
 let xOff=0.12;
 let yOff=0.9;
 
-setInterval(render,200);
+setInterval(render,1000/24);
 
 render();
 
-function render(){
+function render(_dir){
 m.clearRect(0,0,width,height);
-zoomX*=1.04;
-zoomY*=1.04;
-xOff+=0;
-yOff+=0;
+zoomX*=1.004;
+zoomY*=1.004;
+// For steering.
+
+let dirX=0;
+let dirY=0;
+switch (_dir){
+	case "ArrowUp":
+		dirY=steer;
+		break;
+	case "ArrowDown":
+		dirY=-steer;
+		break;
+	case "ArrowRight":
+		dirX=steer;
+		break;
+	case "ArrowLeft":
+		dirX=-steer;
+		break;
+	default:
+		break;
+}
+xOff+=dirX;
+yOff+=dirY;
+
 for (let y=1;y<width;y++){
 for (let x=1;x<height;x++){
 
@@ -48,7 +85,7 @@ b = 2*(a*b)+dy;
 a = d;
 let H = d>rad;
 
-if (H){Atom(x,y,"rgb("+t+","+t*3+","+t*6+")");break;}
+if (H){Atom(x,y,"rgb("+t*rMult+","+t*gMult+","+t*bMult+")");break;}
 
 }
 }
