@@ -1,4 +1,4 @@
-<canvas id="mom" width="256" height="256"></canvas>
+<canvas id="mom" width="512" height="512"></canvas>
 
 <script>
 
@@ -14,17 +14,17 @@ document.addEventListener('keydown', (event) => {
 },false);
 //*********************************
 	
-let width=256;
-let height=256;
+let width=128;
+let height=128;
 let demiWidth=width*0.5;
 let demiHeight=height*0.5;
 let zoomFactor=1.01;
 // RGB multipliers.
-let rMult=1.25;
+let rMult=1;
 let gMult=3;
-let bMult=1.5;
+let bMult=6;
 // Steering strength.
-let steer=0.001;
+let steer=2;
 let cellStep=2;
 	
 let m = document.getElementById("mom").getContext("2d");
@@ -65,8 +65,8 @@ else if (_dir==="ArrowLeft" || _dir==="KeyA"){
 		dirX=steer;}
 
 // Steer strength relative to current zoom (i.e. *10000/zoom).
-xOff+=dirX*10000/zoomX;
-yOff+=dirY*10000/zoomY;
+xOff+=dirX/zoomX;
+yOff+=dirY/zoomY;
 
 // Relative cellSize.
 //if (cellStep>4)
@@ -90,9 +90,7 @@ let H = d>rad;
 	
 if (H){Atom(x,y,"rgb("+t*rMult+","+t*gMult+","+t*bMult+")");break;}
 
-}
-}
-}
+}}}
 _dir=""; // So we don't stick to a steer direction.
 } // render.
 
