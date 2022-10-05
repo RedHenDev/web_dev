@@ -1,0 +1,115 @@
+<canvas id="mom" width="512" height="512"></canvas>
+
+<script>
+
+//*********************************
+let _dir="_";
+document.addEventListener('keydown', (event) => {
+	//let name = event.key;
+	let code = event.code;
+	//render(code);
+	_dir=code;
+	// My first template literal.
+	//alert(`Key pressed ${name} \r\n Key code value: ${code}`);
+},false);
+//*********************************
+	
+let width=200;
+let height=200;
+let demiWidth=width*0.5;
+let demiHeight=height*0.5;
+let zoomFactor=1.01;
+// RGB multipliers.
+/*
+let rMult=0.5;
+let gMult=1.1;
+let bMult=1.5;
+*/
+let rMult=1;
+let gMult=3;
+let bMult=6;
+// Steering strength.
+let steer=2;
+let cellStep=2;
+	
+let m = document.getElementById("mom").getContext("2d");
+
+Atom = function(x,y,c){
+		m.fillStyle=c;
+		m.fillRect(x,y,cellStep,cellStep);
+		}
+
+// Default zoom is 12.
+let zoomX=24;
+let zoomY=24;
+//let xOff=0.12;
+//let yOff=0.86;
+let xOff=0;
+let yOff=0;
+
+setInterval(render,1000/24);
+let i=0;
+render();
+
+function render(){
+//console.log(_dir);
+m.clearRect(0,0,width+1,height+1);
+zoomX*=zoomFactor;
+zoomY*=zoomFactor;
+	
+// For steering.
+let dirX=0;
+let dirY=0;
+	
+if (_dir==="ArrowUp" || _dir==="KeyW"){
+		dirY=steer;}
+else if (_dir==="ArrowDown" || _dir==="KeyS"){
+		dirY=-steer;}
+else if (_dir==="ArrowRight" || _dir==="KeyD"){
+		dirX=-steer;}
+else if (_dir==="ArrowLeft" || _dir==="KeyA"){
+		dirX=steer;}
+
+// Steer strength relative to current zoom (i.e. *10000/zoom).
+xOff+=dirX/zoomX;
+yOff+=dirY/zoomY;
+
+// Relative cellSize.
+//if (cellStep>4)
+//cellStep=1600000/zoomX;
+	
+// Pulsating hue. 
+gM=gMult;
+bM=bMult;
+i+=0.1;
+gMult*=Math.sin(i);
+//bMult*=Math.sin(i);
+for (let y=0;y<width;y+=cellStep-1){
+for (let x=0;x<height;x+=cellStep-1){
+
+let rad = 100;
+let dx = (x-demiWidth)/zoomX-xOff;
+let dy = (y-demiHeight)/zoomY-yOff;
+let a = dx;
+let b = dy;
+
+	
+// 444 Looks OK and FPS OK at 128.
+for (let t=1;t<777;t++){
+let d = (a*a)-(b*b)+dx;
+b = 2*(a*b)+dy;
+a = d;
+
+let H = d>rad;
+	
+if (H){
+	Atom(x,y,"rgb("+t*rMult+","+t*gMult+","+t*bMult+")");break;}
+
+}}}
+	// Reset pulsating hues.
+	gMult=gM;
+	bMult=bM;
+_dir=""; // So we don't stick to a steer direction.
+} // render.
+
+</script>
